@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSV to XLSX Converter</title>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+    <h1>CSV to XLSX Converter</h1>
+    <button onclick="convertCsvToXlsx()">Download Example XLSX</button>
+    <script>
+        async function convertCsvToXlsx() {
+            try {
+                const exampleData = 
+                  "ID,Item Title\n" +
+                  "a-k3jPSWlSAKokMunvj5TDg,Title 1\n" +
+                  "lpGr2pENSXO0KfaBqu60bA,Title 2\n" +
+                  "PzaQruyoRe-SooWsi0j-cg,Title 3";
+
+                const rows = exampleData.split("\n").map(row => row.split(","));
+                const workbook = XLSX.utils.book_new();
+                const worksheet = XLSX.utils.aoa_to_sheet(rows);
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+                const xlsxData = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+                const blob = new Blob([xlsxData], { type: "application/octet-stream" });
+                const downloadLink = document.createElement("a");
+                downloadLink.href = URL.createObjectURL(blob);
+                downloadLink.download = "example_data.xlsx";
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            } catch (error) {
+                console.error("Error:", error.message);
+            }
+        }
+    </script>
+</body>
+</html>
